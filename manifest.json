@@ -1,0 +1,9 @@
+{
+  "name": "iconfont-plugin",
+  "id": 167550530914043,
+  "main": "dist/main.js",
+  "ui": "dist/index.html",
+  "editor_type": [
+    "canvas"
+  ]
+}
