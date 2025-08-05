@@ -17,7 +17,13 @@ const IconGrid: React.FC<IconGridProps> = ({
 }) => {
   return (
     <div style={{ width: "100%" }}>
-      <Flex wrap gap="small" justify="space-around" style={{ width: "100%" }}>
+      <Flex
+        wrap
+        gap={12}
+        justify="start"
+        align="center"
+        style={{ width: "100%" }}
+      >
         {icons.map((icon) => (
           <Tooltip key={icon.id} title={`点击插入 ${icon.id} 图标`}>
             <div

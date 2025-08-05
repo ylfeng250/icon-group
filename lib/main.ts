@@ -3,6 +3,6 @@ import { uiApi } from "./api";
 uiApi.ping();
 
 mg.showUI(__html__, {
-  width: 600,
-  height: 500,
+  width: 500,
+  height: 400,
 });

@@ -4,11 +4,7 @@ import { PictureOutlined } from "@ant-design/icons";
 
 const EmptyState: React.FC = () => {
   return (
-    <Space
-      direction="vertical"
-      align="center"
-      style={{ width: "100%", padding: "60px 0" }}
-    >
+    <Space direction="vertical" align="center" style={{ width: "100%" }}>
       <Empty
         image={
           <PictureOutlined style={{ fontSize: "48px", color: "#d9d9d9" }} />

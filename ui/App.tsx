@@ -90,7 +90,7 @@ function App() {
 
       <Flex gap={5}>
         <Flex vertical gap={5} style={{ width: "100%", padding: 4 }}>
-          <Card>
+          <div style={{ width: "100%", padding: 4 }}>
             <UrlInput
               url={url}
               loading={loading}
@@ -98,7 +98,7 @@ function App() {
               onUrlChange={setUrl}
               onLoad={() => loadIcons(url)}
             />
-          </Card>
+          </div>
 
           {icons.length > 0 && (
             <Flex vertical gap={5}>

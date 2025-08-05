@@ -50,7 +50,7 @@ const SvgPreviewSettings: React.FC<SvgPreviewSettingsProps> = ({
         top: "16px",
       }}
     >
-      <Flex vertical gap="middle" style={{ width: 160 }}>
+      <Flex vertical gap="middle" style={{ width: 140 }}>
         <div>
           <Space style={{ marginBottom: 8 }}>
             <Text type="secondary">尺寸</Text>
