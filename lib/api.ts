@@ -1,11 +1,10 @@
 import { createPluginAPI, createUIAPI } from "mg-jsonrpc";
 
 export const api = createPluginAPI({
-  setToken(token: string) {
-    return mg.clientStorage.setAsync("token", token);
-  },
-  getToken() {
-    return mg.clientStorage.getAsync("token");
+  async createIcon(name: string, svgString: string) {
+    const node = await mg.createNodeFromSvgAsync(svgString);
+    node.name = name;
+    return node;
   },
 });
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Button, Typography, Space, message } from "antd";
-import { CopyOutlined, CloseOutlined } from "@ant-design/icons";
+import { CopyOutlined } from "@ant-design/icons";
 
 const { Text, Paragraph } = Typography;
 
@@ -41,7 +41,7 @@ const IconModal: React.FC<IconModalProps> = ({ visible, icon, onClose }) => {
       onCancel={onClose}
       footer={null}
       width={500}
-      destroyOnClose
+      destroyOnHidden
       style={{ top: 20 }}
     >
       <Space direction="vertical" size="middle" style={{ width: "100%" }}>

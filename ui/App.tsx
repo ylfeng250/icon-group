@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Typography, Card, Space, Flex } from "antd";
+import { Layout, Typography, Card, Space, Flex, Switch } from "antd";
 import "./App.css";
 
 import UrlInput from "./components/UrlInput";
@@ -8,6 +8,8 @@ import IconModal from "./components/IconModal";
 import EmptyState from "./components/EmptyState";
 import { useIconfont } from "./hooks/useIconfont";
 import { IconItem } from "./types";
+import { api } from "@lib/api";
+import { getStyledSvgString } from "./utils/svgUtils";
 
 const { Header, Content } = Layout;
 const { Text } = Typography;
@@ -16,10 +18,18 @@ function App() {
   const { url, setUrl, icons, loading, error, loadIcons } = useIconfont();
   const [selectedIcon, setSelectedIcon] = useState<IconItem | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [debugMode, setDebugMode] = useState(false);
 
-  const handleIconClick = (icon: IconItem) => {
+  const handleIconClick = async (icon: IconItem) => {
     setSelectedIcon(icon);
-    setShowModal(true);
+    // 调试模式在才允许打开图标预览
+    if (debugMode) {
+      setShowModal(true);
+    } else {
+      // 直接插入代码
+      const svgString = getStyledSvgString(icon);
+      await api.createIcon(icon.id, svgString);
+    }
   };
 
   const handleModalClose = () => {
@@ -40,8 +50,20 @@ function App() {
 
         {icons.length > 0 && (
           <Flex gap={5}>
-            <span>图标统计</span>
-            <span>{icons.length} 个图标</span>
+            <Flex gap={5}>
+              <span>图标统计</span>
+              <span>{icons.length} 个图标</span>
+            </Flex>
+
+            <Space>
+              <Switch
+                size="small"
+                checked={debugMode}
+                onChange={(checked: boolean) => setDebugMode(checked)}
+                checkedChildren="开启调试"
+                unCheckedChildren="关闭调试"
+              />
+            </Space>
           </Flex>
         )}
       </Flex>
