@@ -11,9 +11,9 @@ interface IconGridProps {
 
 const IconGrid: React.FC<IconGridProps> = ({ icons, onIconClick }) => {
   return (
-    <Flex wrap gap="small" style={{ padding: "16px" }}>
+    <Flex wrap gap="small">
       {icons.map((icon) => (
-        <Tooltip key={icon.id} title={`点击查看 ${icon.id} 的 SVG 代码`}>
+        <Tooltip key={icon.id} title={`点击插入 ${icon.id} 图标`}>
           <div
             style={{
               width: "80px",

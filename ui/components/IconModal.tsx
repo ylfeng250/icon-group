@@ -5,6 +5,7 @@ import { CopyOutlined, CloseOutlined } from "@ant-design/icons";
 const { Text, Paragraph } = Typography;
 
 import { IconItem } from "../types";
+import { getUseSvgString, getStyledSvgString } from "../utils/svgUtils";
 
 interface IconModalProps {
   visible: boolean;
@@ -13,14 +14,6 @@ interface IconModalProps {
 }
 
 const IconModal: React.FC<IconModalProps> = ({ visible, icon, onClose }) => {
-  const getSvgCode = (icon: IconItem) => {
-    const svgElement = document.createElement("svg");
-    const useElement = document.createElement("use");
-    useElement.setAttribute("xlink:href", `#${icon.id}`);
-    svgElement.appendChild(useElement);
-    return svgElement.outerHTML;
-  };
-
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -32,7 +25,7 @@ const IconModal: React.FC<IconModalProps> = ({ visible, icon, onClose }) => {
 
   if (!icon) return null;
 
-  const svgCode = getSvgCode(icon);
+  const svgCode = getUseSvgString(icon);
 
   return (
     <Modal
@@ -85,43 +78,95 @@ const IconModal: React.FC<IconModalProps> = ({ visible, icon, onClose }) => {
             }}
           >
             <Text strong>SVG 代码</Text>
-            <Button
-              type="primary"
-              icon={<CopyOutlined />}
-              size="small"
-              onClick={() => copyToClipboard(svgCode)}
-            >
-              复制代码
-            </Button>
+            <Space>
+              <Button
+                type="primary"
+                icon={<CopyOutlined />}
+                size="small"
+                onClick={() => copyToClipboard(getStyledSvgString(icon))}
+              >
+                复制完整代码
+              </Button>
+              <Button
+                icon={<CopyOutlined />}
+                size="small"
+                onClick={() => copyToClipboard(svgCode)}
+              >
+                复制 Use 代码
+              </Button>
+            </Space>
           </Space>
-          <div
-            style={{
-              backgroundColor: "#f6f8fa",
-              border: "1px solid #e1e4e8",
-              borderRadius: "6px",
-              padding: "12px",
-              position: "relative",
-            }}
-          >
-            <Paragraph
+
+          <div style={{ marginBottom: "12px" }}>
+            <Text type="secondary" style={{ fontSize: "12px" }}>
+              完整 SVG 代码（包含路径数据）：
+            </Text>
+            <div
               style={{
-                margin: 0,
-                fontFamily: "Monaco, Menlo, Ubuntu Mono, monospace",
-                fontSize: "12px",
-                lineHeight: "1.5",
-                color: "#24292e",
-                wordBreak: "break-all",
-                whiteSpace: "pre-wrap",
-                maxHeight: "150px",
-                overflow: "auto",
-              }}
-              copyable={{
-                text: svgCode,
-                tooltips: ["复制代码", "复制成功"],
+                backgroundColor: "#f6f8fa",
+                border: "1px solid #e1e4e8",
+                borderRadius: "6px",
+                padding: "12px",
+                marginTop: "8px",
+                position: "relative",
               }}
             >
-              {svgCode}
-            </Paragraph>
+              <Paragraph
+                style={{
+                  margin: 0,
+                  fontFamily: "Monaco, Menlo, Ubuntu Mono, monospace",
+                  fontSize: "12px",
+                  lineHeight: "1.5",
+                  color: "#24292e",
+                  wordBreak: "break-all",
+                  whiteSpace: "pre-wrap",
+                  maxHeight: "150px",
+                  overflow: "auto",
+                }}
+                copyable={{
+                  text: getStyledSvgString(icon),
+                  tooltips: ["复制代码", "复制成功"],
+                }}
+              >
+                {getStyledSvgString(icon)}
+              </Paragraph>
+            </div>
+          </div>
+
+          <div>
+            <Text type="secondary" style={{ fontSize: "12px" }}>
+              Use 引用代码（需要 symbol 定义）：
+            </Text>
+            <div
+              style={{
+                backgroundColor: "#f6f8fa",
+                border: "1px solid #e1e4e8",
+                borderRadius: "6px",
+                padding: "12px",
+                marginTop: "8px",
+                position: "relative",
+              }}
+            >
+              <Paragraph
+                style={{
+                  margin: 0,
+                  fontFamily: "Monaco, Menlo, Ubuntu Mono, monospace",
+                  fontSize: "12px",
+                  lineHeight: "1.5",
+                  color: "#24292e",
+                  wordBreak: "break-all",
+                  whiteSpace: "pre-wrap",
+                  maxHeight: "150px",
+                  overflow: "auto",
+                }}
+                copyable={{
+                  text: svgCode,
+                  tooltips: ["复制代码", "复制成功"],
+                }}
+              >
+                {svgCode}
+              </Paragraph>
+            </div>
           </div>
         </div>
       </Space>

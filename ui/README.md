@@ -1,57 +1,110 @@
-# Iconfont 图标预览器
+# Iconfont Plugin UI
 
-一个基于 React + TypeScript + Antd 的现代化 iconfont 图标预览工具。
+这是一个用于加载和预览 Iconfont 图标的插件界面。
 
 ## 功能特性
 
-- 🎨 支持加载 Iconfont JS 资源
-- 📱 响应式设计，支持移动端
-- 🎯 扁平化 UI 设计，使用 Antd 组件
-- 📋 点击图标获取 SVG 代码
-- 🔄 支持切换不同的 iconfont 资源
-- 📦 组件化设计，易于维护和扩展
+- 加载 Iconfont JS 文件
+- 预览图标网格
+- 获取完整的 SVG 代码
+- 支持多种 SVG 格式
 
-## 项目结构
+## SVG 代码获取
 
-```
-ui/
-├── components/          # 组件目录
-│   ├── IconGrid.tsx    # 图标网格组件
-│   ├── IconModal.tsx   # 图标详情模态框
-│   ├── UrlInput.tsx    # URL 输入组件
-│   └── EmptyState.tsx  # 空状态组件
-├── hooks/              # 自定义 Hooks
-│   └── useIconfont.ts  # Iconfont 加载逻辑
-├── types/              # 类型定义
-│   └── index.ts        # 共享类型
-├── App.tsx             # 主应用组件
-├── App.css             # 样式文件
-└── index.tsx           # 入口文件
+### 1. 完整 SVG 代码（推荐）
+
+获取包含实际路径数据的完整 SVG 字符串：
+
+```javascript
+// 在控制台中使用
+const icon = icons[0]; // 获取第一个图标
+const fullSvg = getFullSvgString(icon);
+console.log(fullSvg);
 ```
 
-## 使用方法
+输出示例：
+```html
+<svg viewBox="0 0 1024 1024">
+  <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/>
+</svg>
+```
 
-1. 输入 Iconfont JS 地址（如：`//at.alicdn.com/t/font_xxx.js`）
-2. 点击"加载图标"按钮
-3. 浏览加载的图标
-4. 点击任意图标查看详情和获取 SVG 代码
+### 2. Use 引用代码
 
-## 技术栈
+获取使用 `<use>` 标签的 SVG 代码：
 
-- React 17
-- TypeScript
-- Antd 5.x
-- Vite
+```javascript
+const useSvg = getUseSvgString(icon);
+console.log(useSvg);
+```
 
-## 开发
+输出示例：
+```html
+<svg>
+  <use xlink:href="#icon-fanhui"></use>
+</svg>
+```
 
-```bash
-# 安装依赖
-npm install
+### 3. 带样式的完整代码
 
-# 开发模式
-npm run dev:ui
+获取包含样式的完整 SVG 代码：
 
-# 构建
-npm run build:ui
-``` 
+```javascript
+const styledSvg = getStyledSvgString(icon, {
+  width: "32px",
+  height: "32px",
+  fill: "rgb(61, 61, 61)"
+});
+console.log(styledSvg);
+```
+
+输出示例：
+```html
+<svg viewBox="0 0 1024 1024" style="width: 32px; height: 32px; fill: rgb(61, 61, 61);">
+  <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/>
+</svg>
+```
+
+### 4. 获取所有格式
+
+一次性获取所有可用的 SVG 格式：
+
+```javascript
+const allFormats = getAllSvgFormats(icon);
+console.log(allFormats);
+// 输出：
+// {
+//   full: "<svg viewBox=...>...</svg>",
+//   use: "<svg><use xlink:href=...></svg>",
+//   styled: "<svg style=...>...</svg>",
+//   styledCustom: "<svg style=...>...</svg>"
+// }
+```
+
+## 在 DOM 中直接获取 SVG
+
+你也可以直接从 DOM 中获取 SVG 元素：
+
+```javascript
+// 获取页面中第一个 SVG 元素的完整代码
+const svgFromDOM = getSvgFromDOM('svg');
+console.log(svgFromDOM);
+
+// 获取特定选择器的 SVG
+const specificSvg = getSvgFromDOM('.my-svg-class');
+console.log(specificSvg);
+```
+
+## 使用场景
+
+1. **完整 SVG 代码**：适用于需要独立使用的图标，不依赖外部 symbol 定义
+2. **Use 引用代码**：适用于在同一个页面中有 symbol 定义的情况
+3. **带样式的代码**：适用于需要特定样式的场景
+4. **DOM 获取**：适用于从现有页面元素中提取 SVG 代码
+
+## 注意事项
+
+- 完整 SVG 代码包含实际的路径数据，文件较大但可独立使用
+- Use 引用代码文件小，但需要确保 symbol 定义存在
+- 样式可以通过 CSS 类或内联样式设置
+- 所有函数都支持在浏览器控制台中直接使用 

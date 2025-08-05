@@ -58,7 +58,7 @@ function App() {
         </Card>
 
         {icons.length > 0 ? (
-          <Card bodyStyle={{ padding: "24px" }}>
+          <Card>
             <IconGrid icons={icons} onIconClick={handleIconClick} />
           </Card>
         ) : !loading && !error ? (
