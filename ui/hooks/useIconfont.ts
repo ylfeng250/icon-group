@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { IconItem } from "../types";
 
 export const useIconfont = () => {
@@ -6,7 +6,18 @@ export const useIconfont = () => {
   const [icons, setIcons] = useState<IconItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState("");
   const scriptRef = useRef<HTMLScriptElement | null>(null);
+
+  // 根据搜索关键词过滤图标
+  const filteredIcons = useMemo(() => {
+    if (!searchKeyword.trim()) {
+      return icons;
+    }
+
+    const keyword = searchKeyword.toLowerCase();
+    return icons.filter((icon) => icon.id.toLowerCase().includes(keyword));
+  }, [icons, searchKeyword]);
 
   const loadIcons = async (iconfontUrl: string) => {
     if (!iconfontUrl.trim()) {
@@ -17,6 +28,7 @@ export const useIconfont = () => {
     setLoading(true);
     setError("");
     setIcons([]);
+    setSearchKeyword(""); // 清空搜索关键词
 
     try {
       // 移除之前的脚本
@@ -59,8 +71,11 @@ export const useIconfont = () => {
     url,
     setUrl,
     icons,
+    filteredIcons,
     loading,
     error,
+    searchKeyword,
+    setSearchKeyword,
     loadIcons,
   };
 };

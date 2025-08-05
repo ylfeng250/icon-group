@@ -3,6 +3,7 @@ import { Layout, Typography, Card, Space, Flex, Switch } from "antd";
 import "./App.css";
 
 import UrlInput from "./components/UrlInput";
+import SearchInput from "./components/SearchInput";
 import IconGrid from "./components/IconGrid";
 import IconModal from "./components/IconModal";
 import EmptyState from "./components/EmptyState";
@@ -15,7 +16,17 @@ const { Header, Content } = Layout;
 const { Text } = Typography;
 
 function App() {
-  const { url, setUrl, icons, loading, error, loadIcons } = useIconfont();
+  const {
+    url,
+    setUrl,
+    icons,
+    filteredIcons,
+    loading,
+    error,
+    searchKeyword,
+    setSearchKeyword,
+    loadIcons,
+  } = useIconfont();
   const [selectedIcon, setSelectedIcon] = useState<IconItem | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [debugMode, setDebugMode] = useState(false);
@@ -52,7 +63,9 @@ function App() {
           <Flex gap={5}>
             <Flex gap={5}>
               <span>图标统计</span>
-              <span>{icons.length} 个图标</span>
+              <span>
+                {filteredIcons.length} / {icons.length} 个图标
+              </span>
             </Flex>
 
             <Space>
@@ -79,13 +92,21 @@ function App() {
           />
         </Card>
 
-        {icons.length > 0 ? (
+        {icons.length > 0 && (
           <Card>
-            <IconGrid icons={icons} onIconClick={handleIconClick} />
+            <Flex vertical gap={10}>
+              <SearchInput
+                value={searchKeyword}
+                onChange={setSearchKeyword}
+                placeholder="搜索图标名称..."
+                disabled={loading}
+              />
+              <IconGrid icons={filteredIcons} onIconClick={handleIconClick} />
+            </Flex>
           </Card>
-        ) : !loading && !error ? (
-          <EmptyState />
-        ) : null}
+        )}
+
+        {icons.length === 0 && !loading && !error && <EmptyState />}
       </Flex>
 
       <IconModal
