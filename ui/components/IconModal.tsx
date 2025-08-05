@@ -6,14 +6,21 @@ const { Text, Paragraph } = Typography;
 
 import { IconItem } from "../types";
 import { getUseSvgString, getStyledSvgString } from "../utils/svgUtils";
+import { SvgPreviewSettings } from "./SvgPreviewSettings";
 
 interface IconModalProps {
   visible: boolean;
   icon: IconItem | null;
   onClose: () => void;
+  previewSettings: SvgPreviewSettings;
 }
 
-const IconModal: React.FC<IconModalProps> = ({ visible, icon, onClose }) => {
+const IconModal: React.FC<IconModalProps> = ({
+  visible,
+  icon,
+  onClose,
+  previewSettings,
+}) => {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -55,9 +62,10 @@ const IconModal: React.FC<IconModalProps> = ({ visible, icon, onClose }) => {
         >
           <svg
             style={{
-              width: "48px",
-              height: "48px",
-              fill: "#3D3D3D",
+              width: `${previewSettings.size}px`,
+              height: `${previewSettings.size}px`,
+              fill: previewSettings.color,
+              stroke: previewSettings.color,
               marginBottom: "12px",
             }}
           >

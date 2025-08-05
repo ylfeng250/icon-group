@@ -7,10 +7,12 @@ import SearchInput from "./components/SearchInput";
 import IconGrid from "./components/IconGrid";
 import IconModal from "./components/IconModal";
 import EmptyState from "./components/EmptyState";
+import SvgPreviewSettings from "./components/SvgPreviewSettings";
 import { useIconfont } from "./hooks/useIconfont";
 import { IconItem } from "./types";
 import { api } from "@lib/api";
 import { getStyledSvgString } from "./utils/svgUtils";
+import { SvgPreviewSettings as SvgPreviewSettingsType } from "./components/SvgPreviewSettings";
 
 const { Header, Content } = Layout;
 const { Text } = Typography;
@@ -30,6 +32,11 @@ function App() {
   const [selectedIcon, setSelectedIcon] = useState<IconItem | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [debugMode, setDebugMode] = useState(false);
+  const [previewSettings, setPreviewSettings] =
+    useState<SvgPreviewSettingsType>({
+      size: 16,
+      color: "#3D3D3D",
+    });
 
   const handleIconClick = async (icon: IconItem) => {
     setSelectedIcon(icon);
@@ -49,7 +56,7 @@ function App() {
   };
 
   return (
-    <Flex vertical gap={10} style={{ padding: 8 }}>
+    <Flex vertical gap={5} style={{ padding: 8 }}>
       <Flex vertical>
         <Text type="secondary" style={{ fontSize: "14px" }}>
           本插件仅提供图标加载功能，如拿三方作者 iconfont 资源用于商用,请至
@@ -81,38 +88,51 @@ function App() {
         )}
       </Flex>
 
-      <Flex vertical gap={10} style={{ width: "100%" }}>
-        <Card>
-          <UrlInput
-            url={url}
-            loading={loading}
-            error={error}
-            onUrlChange={setUrl}
-            onLoad={() => loadIcons(url)}
-          />
-        </Card>
-
-        {icons.length > 0 && (
+      <Flex gap={5}>
+        <Flex vertical gap={5} style={{ width: "100%", padding: 4 }}>
           <Card>
-            <Flex vertical gap={10}>
+            <UrlInput
+              url={url}
+              loading={loading}
+              error={error}
+              onUrlChange={setUrl}
+              onLoad={() => loadIcons(url)}
+            />
+          </Card>
+
+          {icons.length > 0 && (
+            <Flex vertical gap={5}>
               <SearchInput
                 value={searchKeyword}
                 onChange={setSearchKeyword}
                 placeholder="搜索图标名称..."
                 disabled={loading}
               />
-              <IconGrid icons={filteredIcons} onIconClick={handleIconClick} />
+              <Flex gap={20} style={{ width: "100%" }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <IconGrid
+                    icons={filteredIcons}
+                    onIconClick={handleIconClick}
+                    previewSettings={previewSettings}
+                  />
+                </div>
+              </Flex>
             </Flex>
-          </Card>
-        )}
+          )}
 
-        {icons.length === 0 && !loading && !error && <EmptyState />}
+          {icons.length === 0 && !loading && !error && <EmptyState />}
+        </Flex>
+        <SvgPreviewSettings
+          settings={previewSettings}
+          onSettingsChange={setPreviewSettings}
+        />
       </Flex>
 
       <IconModal
         visible={showModal}
         icon={selectedIcon}
         onClose={handleModalClose}
+        previewSettings={previewSettings}
       />
     </Flex>
   );
