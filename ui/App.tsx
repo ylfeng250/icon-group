@@ -44,9 +44,14 @@ function App() {
     if (debugMode) {
       setShowModal(true);
     } else {
-      // 直接插入代码
-      const svgString = getStyledSvgString(icon);
-      await api.createIcon(icon.id, svgString);
+      // 直接插入代码，使用当前的预览配置
+      const style = {
+        width: `${previewSettings.size}px`,
+        height: `${previewSettings.size}px`,
+        fill: previewSettings.color,
+      };
+      const svgString = getStyledSvgString(icon, style);
+      await api.createIcon(icon.id, svgString, previewSettings);
     }
   };
 
