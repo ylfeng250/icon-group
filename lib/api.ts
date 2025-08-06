@@ -16,6 +16,12 @@ export const api = createPluginAPI({
     mg.viewport.scrollAndZoomIntoView([node]);
     return node;
   },
+  async setClientStorage(key: string, value: string) {
+    await mg.clientStorage.setAsync(key, value);
+  },
+  async getClientStorage(key: string) {
+    return await mg.clientStorage.getAsync(key);
+  },
 });
 
 export const uiApi = createUIAPI({
