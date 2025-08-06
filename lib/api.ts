@@ -13,6 +13,7 @@ export const api = createPluginAPI({
     node.name = name;
     node.width = options.size;
     node.height = options.size;
+    mg.viewport.scrollAndZoomIntoView([node]);
     return node;
   },
 });
