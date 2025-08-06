@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect } from "react";
+import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import { IconItem } from "../types";
 import { api } from "@lib/api";
 
@@ -12,36 +12,9 @@ export const useIconfont = () => {
   const [error, setError] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
   const scriptRef = useRef<HTMLScriptElement | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // 组件初始化时从存储中恢复 URL
-  useEffect(() => {
-    const restoreUrl = async () => {
-      try {
-        const savedUrl = await api.getClientStorage(STORAGE_KEY);
-        if (savedUrl && savedUrl !== DEFAULT_URL) {
-          setUrl(savedUrl);
-          // 自动加载保存的图标
-          await loadIcons(savedUrl);
-        }
-      } catch (error) {
-        console.warn("Failed to restore saved URL:", error);
-      }
-    };
-
-    restoreUrl();
-  }, []);
-
-  // 根据搜索关键词过滤图标
-  const filteredIcons = useMemo(() => {
-    if (!searchKeyword.trim()) {
-      return icons;
-    }
-
-    const keyword = searchKeyword.toLowerCase();
-    return icons.filter((icon) => icon.id.toLowerCase().includes(keyword));
-  }, [icons, searchKeyword]);
-
-  const loadIcons = async (iconfontUrl: string) => {
+  const loadIcons = useCallback(async (iconfontUrl: string) => {
     if (!iconfontUrl.trim()) {
       setError("请输入有效的 Iconfont JS 地址");
       return;
@@ -90,7 +63,39 @@ export const useIconfont = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // 组件初始化时从存储中恢复 URL 并自动加载
+  useEffect(() => {
+    const initializeFromStorage = async () => {
+      if (isInitialized) return;
+
+      try {
+        const savedUrl = await api.getClientStorage(STORAGE_KEY);
+        if (savedUrl) {
+          setUrl(savedUrl);
+          // 自动加载保存的图标
+          await loadIcons(savedUrl);
+        }
+      } catch (error) {
+        console.warn("Failed to restore saved URL:", error);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    initializeFromStorage();
+  }, [loadIcons, isInitialized]);
+
+  // 根据搜索关键词过滤图标
+  const filteredIcons = useMemo(() => {
+    if (!searchKeyword.trim()) {
+      return icons;
+    }
+
+    const keyword = searchKeyword.toLowerCase();
+    return icons.filter((icon) => icon.id.toLowerCase().includes(keyword));
+  }, [icons, searchKeyword]);
 
   return {
     url,
