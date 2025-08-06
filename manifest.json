@@ -1,9 +1,7 @@
 {
-  "name": "iconfont-plugin",
+  "name": "icon-group",
   "id": 167550530914043,
   "main": "dist/main.js",
   "ui": "dist/index.html",
-  "editor_type": [
-    "canvas"
-  ]
+  "editor_type": ["canvas"]
 }

@@ -13,7 +13,6 @@ export const api = createPluginAPI({
     node.name = name;
     node.width = options.size;
     node.height = options.size;
-    node.fills = [{ type: "SOLID", color: mg.hexToRGBA(options.color) }];
     return node;
   },
 });
